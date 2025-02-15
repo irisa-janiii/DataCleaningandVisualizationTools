@@ -106,9 +106,9 @@ plt.show()
 sns.pairplot(df[['age', 'fare', 'pclass', 'survived']], hue="survived", palette="husl")
 plt.show()
 
-# Heatmap to analyze correlation
+# Heatmap to analyze correlation between numeric variables
 plt.figure(figsize=(8,5))
-sns.heatmap(df.corr(), annot=True, cmap="coolwarm", linewidths=0.5)
+sns.heatmap(df.select_dtypes(include=['number']).corr(), annot=True, cmap="coolwarm", linewidths=0.5)
 plt.title("Correlation Matrix of Variables")
 plt.show()
 
