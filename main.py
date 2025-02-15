@@ -3,126 +3,125 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-# Shkarkimi i dataset-it Titanic nga seaborn
+# Download Titanic dataset from seaborn
 df = sns.load_dataset('titanic')
 
-# Shfaqja e të dhënave të papastruara
-print("Të dhënat e papastruara:")
+# Display uncleaned data
+print("Uncleaned Data:")
 print(df.head())
 
-# -------------------- PASRIMI I TË DHËNAVE -------------------- #
-df.drop(columns=['deck'], inplace=True)  # Heqim kolonën 'deck' që ka shumë vlera të munguara
-df.dropna(subset=['age', 'embarked', 'fare'], inplace=True)  # Heqim rreshtat me vlera të munguara në 'age', 'embarked', 'fare'
-df['embark_town'].fillna('Unknown', inplace=True)  # Mbushim vlerat e munguara me 'Unknown'
-df['age'].fillna(df['age'].median(), inplace=True)  # Mbushim vlerat e munguara të moshës me medianën
+# -------------------- DATA CLEANING -------------------- #
+df.drop(columns=['deck'], inplace=True)  # Drop 'deck' column due to too many missing values
+df.dropna(subset=['age', 'embarked', 'fare'], inplace=True)  # Drop rows with missing values in 'age', 'embarked', 'fare'
+df['embark_town'].fillna('Unknown', inplace=True)  # Fill missing values in 'embark_town' with 'Unknown'
+df['age'].fillna(df['age'].median(), inplace=True)  # Fill missing age values with the median
 
-# Shtimi i një kolone të re për grupimin e moshave
-df['age_group'] = pd.cut(df['age'], bins=[0, 12, 18, 35, 60, 100], labels=['Fëmijë', 'Adoleshent', 'I Rritur', 'I Moshuar', 'Pensionist'])
+# Adding a new column for age groups
+df['age_group'] = pd.cut(df['age'], bins=[0, 12, 18, 35, 60, 100], labels=['Child', 'Teenager', 'Adult', 'Senior', 'Retired'])
 
-# Shtimi i një kolone për të treguar nëse pasagjeri udhëtonte vetëm
+# Adding a new column to indicate if the passenger was traveling alone
 df['travel_alone'] = (df['sibsp'] + df['parch'] == 0).astype(int)
 
-# *** Trajtimi i vlerave ekstreme për 'fare' ***
+# *** Handling extreme values for 'fare' ***
 Q1 = df['fare'].quantile(0.25)
 Q3 = df['fare'].quantile(0.75)
 IQR = Q3 - Q1
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 
-# Kufizimi i vlerave jashtë intervalit
+# Limiting values outside the interquartile range
 df['fare'] = np.where(df['fare'] < lower_bound, lower_bound, df['fare'])
 df['fare'] = np.where(df['fare'] > upper_bound, upper_bound, df['fare'])
 
-# *** Normalizimi i çmimit të biletës ***
-df['fare_log'] = np.log1p(df['fare'])  # Logaritëm natyror për të reduktuar ndikimin e outliers
+# *** Normalizing fare ***
+df['fare_log'] = np.log1p(df['fare'])  # Natural log to reduce the impact of outliers
 
-# *** Kodimi i variablave kategorike ***
-df['sex'] = df['sex'].map({'male': 0, 'female': 1})  # Mashkull -> 0, Femër -> 1
-df['embark_town'] = df['embark_town'].astype('category').cat.codes  # Konvertimi në numra
+# *** Encoding categorical variables ***
+df['sex'] = df['sex'].map({'male': 0, 'female': 1})  # Male -> 0, Female -> 1
+df['embark_town'] = df['embark_town'].astype('category').cat.codes  # Convert to numerical values
 
-# Statistika të përgjithshme
-print("\nStatistika të përgjithshme të dataset-it:")
+# General statistics
+print("\nGeneral Statistics of the dataset:")
 print(df.describe())
 
-# Analizë e mungesave
-print("\nNumri i vlerave të munguara në secilën kolonë:")
+# Missing value analysis
+print("\nNumber of missing values per column:")
 print(df.isnull().sum())
 
-# -------------------- VIZUALIZIMI -------------------- #
+# -------------------- VISUALIZATION -------------------- #
 
-# Vizualizimi i shpërndarjes së moshës
+# Age distribution visualization
 plt.figure(figsize=(8,5))
 sns.histplot(df['age'], bins=20, kde=True, color='blue')
-plt.title("Shpërndarja e Moshës së Pasagjerëve të Titanic")
-plt.xlabel("Mosha")
-plt.ylabel("Frekuenca")
+plt.title("Age Distribution of Titanic Passengers")
+plt.xlabel("Age")
+plt.ylabel("Frequency")
 plt.show()
 
-# Grafiku i numrit të mbijetuarve sipas gjinisë
+# Count plot of survivors by gender
 plt.figure(figsize=(8,5))
 sns.countplot(x='sex', hue='survived', data=df, palette='Set1')
-plt.title("Mbijetesa sipas Gjinisë")
-plt.xlabel("Gjinia")
-plt.ylabel("Numri i Pasagjerëve")
-plt.legend(title="Mbijetuar", labels=["Jo", "Po"])
+plt.title("Survival by Gender")
+plt.xlabel("Gender")
+plt.ylabel("Number of Passengers")
+plt.legend(title="Survived", labels=["No", "Yes"])
 plt.show()
 
-# Boxplot i çmimit të biletës sipas klasës së udhëtimit
+# Boxplot of fare by passenger class
 plt.figure(figsize=(8,5))
 sns.boxplot(x='class', y='fare', data=df, palette='pastel')
-plt.title("Çmimi i Biletës sipas Klasës së Pasagjerëve")
-plt.xlabel("Klasa")
-plt.ylabel("Çmimi i Biletës")
+plt.title("Fare by Passenger Class")
+plt.xlabel("Class")
+plt.ylabel("Fare")
 plt.show()
 
-# Scatter plot i moshës dhe çmimit të biletës
+# Scatter plot of age vs fare
 plt.figure(figsize=(8,5))
 sns.scatterplot(x='age', y='fare', hue='survived', data=df, palette='coolwarm', alpha=0.7)
-plt.title("Mosha dhe Çmimi i Biletës në Titanic")
-plt.xlabel("Mosha")
-plt.ylabel("Çmimi i Biletës")
+plt.title("Age vs Fare on Titanic")
+plt.xlabel("Age")
+plt.ylabel("Fare")
 plt.show()
 
-# Grafiku i mbijetuarve sipas grupmoshës
+# Count plot of survivors by age group
 plt.figure(figsize=(8,5))
 sns.countplot(x='age_group', hue='survived', data=df, palette='Set2')
-plt.title("Mbijetesa sipas Grupmoshës")
-plt.xlabel("Grupmosha")
-plt.ylabel("Numri i Pasagjerëve")
-plt.legend(title="Mbijetuar", labels=["Jo", "Po"])
+plt.title("Survival by Age Group")
+plt.xlabel("Age Group")
+plt.ylabel("Number of Passengers")
+plt.legend(title="Survived", labels=["No", "Yes"])
 plt.show()
 
-# Grafiku i mbijetuarve sipas llojit të udhëtimit (vetëm vs me familje)
+# Count plot of survivors by travel type (alone vs with family)
 plt.figure(figsize=(8,5))
 sns.countplot(x='travel_alone', hue='survived', data=df, palette='coolwarm')
-plt.xticks(ticks=[0, 1], labels=["Me familje", "Vetëm"])
-plt.title("Mbijetesa sipas Udhëtimit Vetëm vs Me Familje")
-plt.xlabel("Lloji i Udhëtimit")
-plt.ylabel("Numri i Pasagjerëve")
-plt.legend(title="Mbijetuar", labels=["Jo", "Po"])
+plt.xticks(ticks=[0, 1], labels=["With Family", "Alone"])
+plt.title("Survival by Travel Type (Alone vs With Family)")
+plt.xlabel("Travel Type")
+plt.ylabel("Number of Passengers")
+plt.legend(title="Survived", labels=["No", "Yes"])
 plt.show()
 
-# Përdorimi i një 'pairplot' për të parë lidhjet mes variablave
+# Pairplot to see relationships between variables
 sns.pairplot(df[['age', 'fare', 'pclass', 'survived']], hue="survived", palette="husl")
 plt.show()
 
-# Përdorimi i një 'heatmap' për të analizuar korrelacionin
+# Heatmap to analyze correlation
 plt.figure(figsize=(8,5))
 sns.heatmap(df.corr(), annot=True, cmap="coolwarm", linewidths=0.5)
-plt.title("Matrica e Korrelacionit të Variablave")
+plt.title("Correlation Matrix of Variables")
 plt.show()
 
-# Pie chart për përqindjen e pasagjerëve sipas gjinisë
+# Pie chart of passenger gender distribution
 plt.figure(figsize=(6,6))
-df['sex'].replace({0: "Male", 1: "Female"}, inplace=True)  # Rikthimi në etiketa tekstuale për paraqitje më të mirë
+df['sex'].replace({0: "Male", 1: "Female"}, inplace=True)  # Convert back to textual labels for better presentation
 df['sex'].value_counts().plot.pie(autopct='%1.1f%%', colors=['lightblue', 'pink'])
-plt.title("Përqindja e Pasagjerëve sipas Gjinisë")
+plt.title("Gender Distribution of Passengers")
 plt.ylabel("")
 plt.show()
 
-# -------------------- RUATJA E TË DHËNAVE -------------------- #
+# -------------------- SAVING DATA -------------------- #
 
-# Ruajtja e të dhënave të pastruara në një skedar CSV
+# Save the cleaned data to a CSV file
 df.to_csv("titanic_cleaned.csv", index=False)
-print("\nDataset-i i pastruar është ruajtur në titanic_cleaned.csv")
-
+print("\nCleaned dataset has been saved to titanic_cleaned.csv")
