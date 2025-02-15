@@ -34,7 +34,7 @@ pip install -r requirements.txt
 ## Run Instructions
 To execute the script and generate visualizations, run the following command:
 ```sh
-python tmain.py
+python main.py
 ```
 
 This will output cleaned data and display various visualizations for analysis.
