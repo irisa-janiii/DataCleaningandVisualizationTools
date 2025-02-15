@@ -1,33 +1,46 @@
 
-# Data Cleaning & Visualization Tool  
+## Project Context and Outcomes
+This project focuses on cleaning and visualizing the Titanic dataset using Python. The dataset is analyzed for missing values, normalized, and categorized where necessary. Various visualization techniques are employed to explore relationships between different features, such as survival rate by gender and class, age distributions, and fare analysis. The final cleaned dataset is saved for further use.
 
-##  Project Description  
-This project provides a **scalable data pipeline** for **cleaning and visualizing data**, integrating both **batch and real-time processing** techniques. It enhances **data quality** by removing duplicates, handling missing values, and ensuring standardized formats.  
+## Prerequisites
+Before running this project, ensure you have the following installed:
+- Python 3.x
+- pip (Python package manager)
+- Required Python libraries:
+  - pandas
+  - numpy
+  - matplotlib
+  - seaborn
 
-##  Project Goals  
-- **Enhance Data Quality**: Clean raw data for accurate insights.  
--  **Scalable Pipeline**: Combine **batch processing (Pentaho ETL)** with **real-time streaming (Apache Flink)**.  
--  **Generate Visualizations**: Use **Matplotlib, Seaborn, Tableau, and Grafana**.  
+You can install the dependencies using the following command:
+```bash
+pip install pandas numpy matplotlib seaborn
+```
 
-##  Technologies Used  
-- **Python (Pandas, Matplotlib, Seaborn)**
-- **Pentaho Data Integration (ETL)**
-- **Apache Flink (Real-time processing)**
-- **Grafana/Tableau (Advanced dashboards)**
-
-##  Prerequisites  
-Ensure you have the following installed:  
-- **Python 3.8+**  
-- **pip** (Python package manager)  
-
-##  Installation  
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/yourusername/DataCleaning_Visualization_Tool.git
-   cd DataCleaning_Visualization_Tool
-2.Install dependencies:
+## Installation
+1. Clone this repository to your local machine:
+```bash
+git clone https://github.com/irisajaniii/titanic-analysis.git
+```
+2. Navigate to the project directory:
+```bash
+cd main.py
+```
+3. Install the required dependencies (if not already installed):
+```sh
 pip install -r requirements.txt
-3.Add a sample dataset (data/sample_data.csv).
+```
 
-## Running the Project
-python main.py
+## Run Instructions
+To execute the script and generate visualizations, run the following command:
+```sh
+python tmain.py
+```
+
+This will output cleaned data and display various visualizations for analysis.
+
+## Expected Outputs
+- Cleaned Titanic dataset saved as `titanic_cleaned.csv`
+- Multiple visualizations, including histograms, scatter plots, boxplots, pie charts, and heatmaps
+
+
