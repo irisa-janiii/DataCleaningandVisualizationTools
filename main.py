@@ -1,45 +1,32 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the dataset
-def load_data(file_path):
-    try:
-        df = pd.read_csv(file_path)
-        print("Data loaded successfully.")
-        return df
-    except Exception as e:
-        print(f"Error loading data: {e}")
-        return None
+# Load dataset
+df = pd.read_csv('cleaned_data.csv')  # Ensure dataset is cleaned
 
-# Data cleaning: Remove duplicates & handle missing values
-def clean_data(df):
-    df.drop_duplicates(inplace=True)
-    df.fillna(df.mean(numeric_only=True), inplace=True)  # Fill missing numeric values with mean
-    print("Data cleaned successfully.")
-    return df
+# Data Visualization
+plt.figure(figsize=(8, 5))
+sns.histplot(df['Value'], bins=30, kde=True, color='blue')
+plt.title('Distribution of Values')
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+plt.savefig("histogram.png")
+plt.show()
 
-# Visualization: Generate bar and line plots
-def visualize_data(df):
-    plt.figure(figsize=(10, 5))
-    
-    # Example: Count plot for a categorical column (modify as per dataset)
-    sns.countplot(x=df.columns[0], data=df)
-    plt.title("Category Distribution")
-    plt.show()
+plt.figure(figsize=(6, 5))
+sns.boxplot(x=df['Category'], y=df['Value'], palette='Set2')
+plt.title('Boxplot of Values by Category')
+plt.xlabel('Category')
+plt.ylabel('Value')
+plt.savefig("boxplot.png")
+plt.show()
 
-    # Example: Line plot for numerical trends
-    if df.select_dtypes(include=['number']).shape[1] > 1:
-        df.plot(kind="line", figsize=(10, 5))
-        plt.title("Numerical Data Trends")
-        plt.show()
-    else:
-        print("Not enough numeric columns for line plot.")
+plt.figure(figsize=(6, 5))
+sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm', linewidths=0.5)
+plt.title('Feature Correlation Heatmap')
+plt.savefig("heatmap.png")
+plt.show()
 
-if __name__ == "__main__":
-    file_path = "data/sample_data.csv"  # Make sure to have a sample dataset
-    df = load_data(file_path)
-    
-    if df is not None:
-        df = clean_data(df)
-        visualize_data(df)
+print("Data Visualization Completed Successfully!")
