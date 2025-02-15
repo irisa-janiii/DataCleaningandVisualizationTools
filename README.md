@@ -24,7 +24,7 @@ git clone https://github.com/irisa-janiii/DataCleaningandVisualizationTools.git
 ```
 2. Navigate to the project directory:
 ```bash
-cd DataCleaningandVisialozationTools
+cd DataCleaningandVisualizationTools
 ```
 3. Install the required dependencies (if not already installed):
 ```sh
