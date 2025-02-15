@@ -25,3 +25,9 @@ Ensure you have the following installed:
    ```bash
    git clone https://github.com/yourusername/DataCleaning_Visualization_Tool.git
    cd DataCleaning_Visualization_Tool
+2.Install dependencies:
+pip install -r requirements.txt
+3.Add a sample dataset (data/sample_data.csv).
+
+## Running the Project
+python main.py
