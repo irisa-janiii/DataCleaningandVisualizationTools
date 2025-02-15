@@ -20,7 +20,7 @@ pip install pandas numpy matplotlib seaborn
 ## Installation
 1. Clone this repository to your local machine:
 ```bash
-git clone https://github.com/irisajaniii/titanic-analysis.git
+git clone https://github.com/irisajaniii/DataCleaningandVisualizationTools.git
 ```
 2. Navigate to the project directory:
 ```bash
